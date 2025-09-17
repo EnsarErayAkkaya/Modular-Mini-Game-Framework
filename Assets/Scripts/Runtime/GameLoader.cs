@@ -5,7 +5,7 @@ namespace EEA.Services
 {
     public class GameLoader : MonoBehaviour
     {
-        async void Start()
+        void Start()
         {
             ServicesContainer.Instance.Initialize();
 

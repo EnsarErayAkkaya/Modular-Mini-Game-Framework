@@ -14,13 +14,6 @@ namespace EEA.Services.SaveServices
         bool CheckKeyExist(string key);
     }
 
-    // For objects that can be serialized/deserialized.
-    public interface ISerializer<T>
-    {
-        string Serialize(T obj);
-        T Deserialize(string data);
-    }
-
     // Anything saveable must implement this.
     public interface ISaveable
     {
