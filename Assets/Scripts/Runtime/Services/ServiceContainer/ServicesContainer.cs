@@ -1,4 +1,5 @@
 using EEA.Services.Events;
+using EEA.Services.SaveServices;
 using EEA.Services.SceneServices;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace EEA.Services
     {
         [SerializeField] private ServicesSettings _settings;
 
-        //private SaveService saveService;
+        private SaveService _saveService;
         private SceneService _sceneService;
         private EventBus _eventBus;
         //private WindowService windowService;
@@ -18,6 +19,7 @@ namespace EEA.Services
         public ServicesSettings Settings => _settings;
         public static ISceneService SceneService => _instance._sceneService;
         public static IEventBus EventBus => _instance._eventBus;
+        public static ISaveService SaveService => _instance._saveService;
         //public static IWindowService WindowService => instance.windowService;
         public static ServicesContainer Instance => _instance;
 
@@ -35,6 +37,7 @@ namespace EEA.Services
         {
             _eventBus = new EventBus();
             _sceneService = new SceneService(_settings.sceneServiceSettings);
+            _saveService = new SaveService(new EncryptedSaveHandler());
         }
     }
 }

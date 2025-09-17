@@ -1,6 +1,5 @@
 using EEA.Services.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +9,12 @@ namespace EEA.Services.SaveServices
 {
     public class EncryptedSaveHandler : ISaveHandler
     {
-        private string encryptionKey = ";V2)9.;&SqZB]{p4";
+        private readonly string _encryptionKey;
+
+        public EncryptedSaveHandler()
+        {
+            _encryptionKey = ";V2)9.;&SqZB]{p4";
+        }
 
         public async Task<string> LoadDataAsync(string saveKey)
         {
@@ -42,7 +46,7 @@ namespace EEA.Services.SaveServices
             string modifiedData = "";
             for (int i = 0; i < data.Length; i++)
             {
-                modifiedData += (char)(data[i] ^ encryptionKey[i % encryptionKey.Length]);
+                modifiedData += (char)(data[i] ^ _encryptionKey[i % _encryptionKey.Length]);
             }
 
             return modifiedData;
@@ -54,7 +58,7 @@ namespace EEA.Services.SaveServices
             StringBuilder modifiedData = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
             {
-                modifiedData.Append((char)(data[i] ^ encryptionKey[i % encryptionKey.Length]));
+                modifiedData.Append((char)(data[i] ^ _encryptionKey[i % _encryptionKey.Length]));
             }
 
             // Convert the result to a byte array
