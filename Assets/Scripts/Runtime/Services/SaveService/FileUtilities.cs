@@ -24,7 +24,7 @@ namespace EEA.Services.Utilities
             }
             catch (Exception e)
             {
-                Debug.LogError("Error occured when trying to save event data: " + e);
+                GameLogger.LogError("Error occured when trying to save event data: " + e);
             }
         }
 
@@ -46,7 +46,7 @@ namespace EEA.Services.Utilities
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("Error occured when trying to save event data: " + e);
+                    GameLogger.LogError("Error occured when trying to save event data: " + e);
                 }
             }
 

@@ -45,7 +45,7 @@ namespace EEA.Services.SceneServices
 
                 if (sceneGameobject == null)
                 {
-                    Debug.LogError($"Scene '{sceneGameobject.name}' not found!");
+                    GameLogger.LogError($"Scene '{sceneGameobject.name}' not found!");
                     return null;
                 }
 

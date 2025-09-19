@@ -144,7 +144,7 @@ namespace EEA.Services.PoolServices
             }
             else if (ServicesContainer.Instance.Settings.debugLog)
             {
-                Debug.LogWarning("Attempting to spawn a null prefab");
+                GameLogger.LogWarning("Attempting to spawn a null prefab");
             }
 
             return null;
@@ -179,7 +179,7 @@ namespace EEA.Services.PoolServices
                 else
                 {
                     if (ServicesContainer.Instance.Settings.debugLog)
-                        Debug.LogWarning("Attempting to despawn " + clone.name + ", but failed to find pool for it! Make sure you created it using PoolService.Spawn!");
+                        GameLogger.LogWarning("Attempting to despawn " + clone.name + ", but failed to find pool for it! Make sure you created it using PoolService.Spawn!");
 
                     // Fall back to normal destroying
                     GameObject.Destroy(clone);
@@ -187,7 +187,7 @@ namespace EEA.Services.PoolServices
             }
             else
             {
-                //Debug.LogError("Attempting to despawn a null clone");
+                //GameLogger.LogError("Attempting to despawn a null clone");
             }
         }
     }

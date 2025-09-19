@@ -91,7 +91,7 @@ namespace EEA.Menu
                 _isSnapping = true;
             }
 
-            //Debug.Log($"Snapping to index: {index}, previous: {previousIndex}");
+            //GameLogger.Log($"Snapping to index: {index}, previous: {previousIndex}");
 
             if (_previousIndex != index)
             {

@@ -29,7 +29,7 @@ namespace EEA.MiniGames
             var miniGameData = _settings.MiniGames.FirstOrDefault(g => g.Id == gameId);
             if (miniGameData == null)
             {
-                Debug.LogError($"MiniGame {gameId} not found!");
+                GameLogger.Log($"MiniGame {gameId} not found!");
                 return null;
             }
 

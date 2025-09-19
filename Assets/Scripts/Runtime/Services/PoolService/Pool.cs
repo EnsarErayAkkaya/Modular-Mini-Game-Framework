@@ -105,7 +105,7 @@ namespace EEA.Services.PoolServices
                     }
                     else if (ServicesContainer.Instance.Settings.debugLog)
                     {
-                        Debug.LogWarning("The " + PoolParent.name + " contained a null cache entry");
+                        GameLogger.Log("The " + PoolParent.name + " contained a null cache entry");
                     }
                 }
 
@@ -123,7 +123,7 @@ namespace EEA.Services.PoolServices
             else
             {
                 if (ServicesContainer.Instance.Settings.debugLog)
-                    Debug.LogWarning("Attempting to spawn null");
+                    GameLogger.Log("Attempting to spawn null");
             }
 
             return null;
@@ -181,7 +181,7 @@ namespace EEA.Services.PoolServices
             }
             else
             {
-                //Debug.LogWarning("Attempting to despawn a null clone");
+                //GameLogger.Log("Attempting to despawn a null clone");
             }
         }
 

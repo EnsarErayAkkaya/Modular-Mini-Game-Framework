@@ -29,6 +29,22 @@ The entry point is handled by the `GameLoader` class, which bootstraps core serv
 - Register scene keys in `SceneServices.SceneKeys`.  
 - The framework will handle loading/unloading smoothly.  
 
+## Optimization
+
+To ensure smooth performance across multiple mini-games, the framework includes built-in optimization features:
+
+- **Scene Management**  
+  - Lightweight **Initial** and **Menu** scenes stay resident.  
+  - Mini-games are loaded/unloaded on demand to reduce memory usage.  
+
+- **Object Pooling**  
+  - **Global Pool** → Reusable objects shared across all mini-games (e.g., UI elements, FX).  
+  - **Mini-Game Pools** → Localized pools for game-specific objects, cleared when the mini-game ends.  
+
+- **Event Buses**  
+  - **Global Event Bus** → Handles communication across the entire framework (UI, services, system events).  
+  - **Mini-Game Event Bus** → Keeps events isolated within each mini-game to avoid cross-talk and memory leaks.
+
 ---
 
 ## 📝 Notes

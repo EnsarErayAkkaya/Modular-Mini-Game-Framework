@@ -10,5 +10,17 @@ namespace EEA.Services
             LogHistory += message + "\n";
             Debug.Log(message);
         }
+
+        public static void LogWarning(string message)
+        {
+            LogHistory += message + "\n";
+            Debug.LogWarning(message);
+        }
+
+        public static void LogError(string message)
+        {
+            LogHistory += message + "\n";
+            Debug.LogError(message);
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace EEA.Services.SaveServices
             _repositories.Add(typeof(T), repo);
 
             if (ServicesContainer.Instance.Settings.debugLog)
-                Debug.Log($"[SaveService] Registered type {typeof(T).Name} with key {key}");
+                GameLogger.Log($"[SaveService] Registered type {typeof(T).Name} with key {key}");
         }
 
         public SaveRepository<T> GetRepository<T>() where T : ISaveable, new()
@@ -34,7 +34,7 @@ namespace EEA.Services.SaveServices
             if (_repositories.TryGetValue(typeof(T), out var repo))
                 return repo as SaveRepository<T>;
 
-            Debug.LogError($"[SaveService] Repository for {typeof(T).Name} not registered!");
+            GameLogger.LogError($"[SaveService] Repository for {typeof(T).Name} not registered!");
             return null;
         }
     }
