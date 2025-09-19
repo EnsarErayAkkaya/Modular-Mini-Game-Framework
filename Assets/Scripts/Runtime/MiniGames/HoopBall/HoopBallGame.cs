@@ -81,6 +81,7 @@ namespace EEA.MiniGames.HoopBall
 
         public void EndGame()
         {
+            _eventBus.Clear();
             ServicesContainer.EventBus.Publish(new OnMiniGameEnded(_hoopBallData.Id));
         }
 
