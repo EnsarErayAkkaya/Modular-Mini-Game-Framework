@@ -49,7 +49,7 @@ namespace EEA.Services.Windows
         private Window Create(GameObject prefab, string id)
         {
             Window window = ServicesContainer.GlobalPool.Spawn(prefab).GetComponent<Window>();
-            window.transform.parent = Canvas.transform;
+            window.transform.SetParent(Canvas.transform);
             window.Init(id);
 
             _windows.Add(window);
