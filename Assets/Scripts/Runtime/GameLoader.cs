@@ -11,7 +11,7 @@ namespace EEA.Services
 
             ServicesContainer.SceneService.LoadScene(SceneServices.SceneKeys.InitialScene);
 
-            ServicesContainer.SceneService.LoadScene(SceneServices.SceneKeys.GameScene);
+            ServicesContainer.SceneService.LoadScene(SceneServices.SceneKeys.MenuScene);
         }
     }
 }

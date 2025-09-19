@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 namespace EEA.Services.SceneServices
 {
@@ -7,8 +8,8 @@ namespace EEA.Services.SceneServices
     {
         public Dictionary<string, GameObject> LoadedScenes { get; }
 
-        GameObject LoadScene(string sceneType);
-        void RemoveScene(string scene);
+        Task<GameObject> LoadScene(string sceneType);
+        Task RemoveScene(string scene);
 
         void Clear();
     }

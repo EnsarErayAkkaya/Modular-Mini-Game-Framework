@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace EEA.Services.SaveServices
 {
-    public class SaveService : ISaveService
+    public class SaveService : BaseService, ISaveService
     {
         private readonly ISaveHandler _saveHandler;
         private readonly Dictionary<Type, object> _repositories = new();

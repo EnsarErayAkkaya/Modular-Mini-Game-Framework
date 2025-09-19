@@ -1,11 +1,11 @@
 namespace EEA.Services.SceneServices
 {
-    public struct SceneTransitionStarted
+    public struct OnSceneTransitionStarted
     {
         public SceneConfig SceneConfig;
     }
 
-    public struct SceneTransitionEnded
+    public struct OnSceneTransitionEnded
     {
         public SceneConfig SceneConfig;
     }

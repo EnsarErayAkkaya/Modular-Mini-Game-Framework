@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75dd4e4b78c11a4295db0ef629e0144, type: 3}
   m_Name: ServicesSettings
   m_EditorClassIdentifier: 
-  sceneServiceSettings: {fileID: 11400000, guid: 447a447c6d2d5f048997c88275960bd4,
+  SceneServiceSettings: {fileID: 11400000, guid: 447a447c6d2d5f048997c88275960bd4,
+    type: 2}
+  PoolServiceSettings: {fileID: 11400000, guid: d97a43b7d44b89b468439a67721eb370,
+    type: 2}
+  WindowServiceSettings: {fileID: 11400000, guid: d96b9ba11524ad8498a2b2bf59cf32a8,
     type: 2}
   debugLog: 1

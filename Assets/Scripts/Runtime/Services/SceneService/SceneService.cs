@@ -1,3 +1,4 @@
+using EEA.Services.SceneService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -26,41 +27,70 @@ namespace EEA.Services.SceneServices
             _loadedScenes.Clear();
         }
 
-        public GameObject LoadScene(string sceneKey)
+        public async Task<GameObject> LoadScene(string sceneKey)
         {
-            var config = _settings.GetSceneConfig(sceneKey);
-
-            ServicesContainer.EventBus.Publish(new SceneTransitionStarted() { SceneConfig = config });
-
-            if (config.RemoveAllOtherScenes)
+            try
             {
-                Clear();
+                var config = _settings.GetSceneConfig(sceneKey);
+
+                ServicesContainer.EventBus.Publish(new OnSceneTransitionStarted() { SceneConfig = config });
+
+                if (config.RemoveAllOtherScenes)
+                {
+                    Clear();
+                }
+
+                // Find prefab
+                var sceneGameobject = LoadSceneResource(sceneKey);
+
+                if (sceneGameobject == null)
+                {
+                    Debug.LogError($"Scene '{sceneGameobject.name}' not found!");
+                    return null;
+                }
+
+                // Instantiate
+                var currentScene = GameObject.Instantiate(sceneGameobject);
+                _loadedScenes.Add(sceneKey, currentScene);
+
+                ISceneObject sceneObject = currentScene.GetComponent<ISceneObject>();
+                if (sceneObject != null)
+                {
+                    await sceneObject.Initialize();
+                }
+
+                ServicesContainer.EventBus.Publish(new OnSceneTransitionEnded() { SceneConfig = config });
+
+                return currentScene;
             }
-
-            // Find prefab
-            var sceneGameobject = LoadSceneResource(sceneKey);
-
-            if (sceneGameobject == null)
+            catch (System.Exception e)
             {
-                Debug.LogError($"Scene '{sceneGameobject.name}' not found!");
+                GameLogger.Log(e.Message);
                 return null;
             }
-
-            // Instantiate
-            var currentScene = GameObject.Instantiate(sceneGameobject);
-            _loadedScenes.Add(sceneKey, currentScene);
-
-            ServicesContainer.EventBus.Publish(new SceneTransitionEnded() { SceneConfig = config });
-
-            return currentScene;
         }
 
-        public void RemoveScene(string scene)
+        public async Task RemoveScene(string scene)
         {
-            if (_loadedScenes.TryGetValue(scene, out var go))
+            try
             {
-                GameObject.Destroy(go);
-                _loadedScenes.Remove(scene);
+                if (_loadedScenes.TryGetValue(scene, out var sceneGO))
+                {
+                    ISceneObject sceneObject = sceneGO.GetComponent<ISceneObject>();
+
+                    if (sceneObject != null)
+                    {
+                        await sceneObject.Clear();
+                    }
+
+                    GameObject.Destroy(sceneGO);
+
+                    _loadedScenes.Remove(scene);
+                }
+            }
+            catch (System.Exception e)
+            {
+                GameLogger.Log(e.Message);
             }
         }
 

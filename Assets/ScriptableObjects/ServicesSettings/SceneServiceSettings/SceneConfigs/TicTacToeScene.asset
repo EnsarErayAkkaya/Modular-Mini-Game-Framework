@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1127cc6cd78db384b92dd2a1ba8de230, type: 3}
-  m_Name: GameScene
+  m_Name: TicTacToeScene
   m_EditorClassIdentifier: 
-  SceneKey: game_scene
+  SceneKey: tic_tac_toe_scene
   RemoveAllOtherScenes: 0
   ShowSceneTransition: 1

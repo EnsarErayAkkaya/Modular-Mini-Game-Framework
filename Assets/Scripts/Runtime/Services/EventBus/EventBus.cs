@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EEA.Services.Events
 {
-    public class EventBus : MonoBehaviour, IEventBus
+    public class EventBus : BaseService, IEventBus
     {
         private Dictionary<Type, Delegate> _events = new Dictionary<Type, Delegate>();
 

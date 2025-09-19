@@ -1,4 +1,5 @@
 using EEA.Services.Events;
+using EEA.Shared;
 using System.Collections;
 using UnityEngine;
 
@@ -14,17 +15,17 @@ namespace EEA.Services.SceneServices
 
         private void Start()
         {
-            ServicesContainer.EventBus.Subscribe<SceneTransitionStarted>(OnSceneTransitionStarted);
-            ServicesContainer.EventBus.Subscribe<SceneTransitionEnded>(OnSceneTransitionCompleted);
+            ServicesContainer.EventBus.Subscribe<OnSceneTransitionStarted>(OnSceneTransitionStarted);
+            ServicesContainer.EventBus.Subscribe<OnSceneTransitionEnded>(OnSceneTransitionCompleted);
         }
 
         private void OnDestroy()
         {
-            ServicesContainer.EventBus.Unsubscribe<SceneTransitionStarted>(OnSceneTransitionStarted);
-            ServicesContainer.EventBus.Unsubscribe<SceneTransitionEnded>(OnSceneTransitionCompleted);
+            ServicesContainer.EventBus.Unsubscribe<OnSceneTransitionStarted>(OnSceneTransitionStarted);
+            ServicesContainer.EventBus.Unsubscribe<OnSceneTransitionEnded>(OnSceneTransitionCompleted);
         }
 
-        private void OnSceneTransitionStarted(SceneTransitionStarted data)
+        private void OnSceneTransitionStarted(OnSceneTransitionStarted data)
         {
             if (!data.SceneConfig.ShowSceneTransition) return;
 
@@ -34,10 +35,10 @@ namespace EEA.Services.SceneServices
                 _cachedRoutine = null;
             }
 
-            _cachedRoutine = StartCoroutine(TransitionEnumerator(.3f, 0, 1));
+            _cachedRoutine = StartCoroutine(Tweens.FadeCanvasGroup(_transitionImage, 0, 1, .3f));
         }
 
-        private void OnSceneTransitionCompleted(SceneTransitionEnded data)
+        private void OnSceneTransitionCompleted(OnSceneTransitionEnded data)
         {
             if (!data.SceneConfig.ShowSceneTransition) return;
 
@@ -47,22 +48,7 @@ namespace EEA.Services.SceneServices
                 _cachedRoutine = null;
             }
 
-            _cachedRoutine = StartCoroutine(TransitionEnumerator(.3f, 1, 0));
-        }
-
-        private IEnumerator TransitionEnumerator(float duration, float start, float alpha)
-        {
-            float t = 0;
-            while (t < duration)
-            {
-                _transitionImage.alpha = Mathf.Lerp(start, alpha, t / duration);
-
-                t += Time.deltaTime;
-
-                yield return _waitForEndOfFrame;
-            }
-
-            _transitionImage.alpha = alpha;
+            _cachedRoutine = StartCoroutine(Tweens.FadeCanvasGroup(_transitionImage, 1, 0, .3f));
         }
     }
 }
