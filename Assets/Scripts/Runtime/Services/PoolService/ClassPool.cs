@@ -8,7 +8,7 @@ namespace EEA.Services.PoolServices
     public static class ClassPool<T>
         where T : class
     {
-        private static List<T> cache = new List<T>();
+        private static List<T> _cache = new List<T>();
 
         public static T Spawn()
         {
@@ -32,15 +32,15 @@ namespace EEA.Services.PoolServices
         public static T Spawn(System.Predicate<T> match, System.Action<T> onSpawn)
         {
             // Get the matched index, or the last index
-            var index = match != null ? cache.FindIndex(match) : cache.Count - 1;
+            var index = match != null ? _cache.FindIndex(match) : _cache.Count - 1;
 
             // Was one found?
             if (index >= 0)
             {
                 // Get instance and remove it from cache
-                var instance = cache[index];
+                var instance = _cache[index];
 
-                cache.RemoveAt(index);
+                _cache.RemoveAt(index);
 
                 // Run action?
                 if (onSpawn != null)
@@ -74,28 +74,28 @@ namespace EEA.Services.PoolServices
                 }
 
                 // Add to cache
-                cache.Add(instance);
+                _cache.Add(instance);
             }
         }
 
         public static void Clear()
         {
-            cache.Clear();
+            _cache.Clear();
         }
     }
 
     public static class ClassPool
     {
-        private static List<object> cache = new List<object>();
+        private static List<object> _cache = new List<object>();
 
         public static T Spawn<T>() where T : class
         {
-            for (int i = 0; i < cache.Count; i++)
+            for (int i = 0; i < _cache.Count; i++)
             {
-                object instance = cache[i];
+                object instance = _cache[i];
                 if (instance is T)
                 {
-                    cache.RemoveAt(i);
+                    _cache.RemoveAt(i);
                     return (T)instance;
                 }
             }
@@ -110,13 +110,13 @@ namespace EEA.Services.PoolServices
             if (instance != null)
             {
                 // Add to cache
-                cache.Add(instance);
+                _cache.Add(instance);
             }
         }
 
         public static void Clear()
         {
-            cache.Clear();
+            _cache.Clear();
         }
     }
 }

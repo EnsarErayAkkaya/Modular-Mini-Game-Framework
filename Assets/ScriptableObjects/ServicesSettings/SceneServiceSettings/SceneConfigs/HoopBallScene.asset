@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19f5c4e1be0c93541b85d006886714b6, type: 3}
-  m_Name: MiniGameServiceSettings
+  m_Script: {fileID: 11500000, guid: 1127cc6cd78db384b92dd2a1ba8de230, type: 3}
+  m_Name: HoopBallScene
   m_EditorClassIdentifier: 
-  MiniGames:
-  - {fileID: 11400000, guid: ebb9e5a52061efd41a622913d2b8a6c5, type: 2}
-  - {fileID: 11400000, guid: 8557017e2f70f2f4292b80f6eccd4099, type: 2}
+  SceneKey: hoop_ball_scene
+  RemoveAllOtherScenes: 0
+  ShowSceneTransition: 1

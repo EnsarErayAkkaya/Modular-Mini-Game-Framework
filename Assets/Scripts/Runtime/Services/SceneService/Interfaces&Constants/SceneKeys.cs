@@ -6,5 +6,6 @@ namespace EEA.Services.SceneServices
         public const string SplashScene = "splash_scene";
         public const string MenuScene = "menu_scene";
         public const string TicTacToeScene = "tic_tac_toe_scene";
+        public const string HoopBallScene = "hoop_ball_scene";
     }
 }

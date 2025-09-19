@@ -9,9 +9,9 @@ namespace EEA.MiniGames.TicTacToe
     public class TicTacToeStrikeLine : MonoBehaviour
     {
         [SerializeField] private RectTransform _rectTransform;
-        [SerializeField] private Image Image;
+        [SerializeField] private Image _image;
 
-        public Image LineImage => Image;
+        public Image LineImage => _image;
         public RectTransform RectTransform => _rectTransform;
 
         public IEnumerator AnimateStrikeLine(Vector2 from, Vector2 to)

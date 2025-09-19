@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 473022963353768042}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1051,7 +1051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 4918055067245977833}
-  Image: {fileID: 2711114315036965544}
+  _image: {fileID: 2711114315036965544}
 --- !u!1001 &394556276864558890
 PrefabInstance:
   m_ObjectHideFlags: 0

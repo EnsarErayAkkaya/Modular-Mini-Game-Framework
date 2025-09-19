@@ -13,13 +13,13 @@ namespace EEA.Services.PoolServices
         public int Capacity;
 
         // All the currently cached prefab instances
-        public List<GameObject> cache = new List<GameObject>();
+        public List<GameObject> Cache = new List<GameObject>();
 
         // All the delayed destruction objects
-        public List<DelayedDestruction> delayedDestructions = new List<DelayedDestruction>();
+        public List<DelayedDestruction> DelayedDestructions = new List<DelayedDestruction>();
 
         // The total amount of created prefabs
-        public int total;
+        private int _total;
 
         public Transform PoolParent;
 
@@ -28,7 +28,7 @@ namespace EEA.Services.PoolServices
         {
             get
             {
-                return total;
+                return _total;
             }
         }
 
@@ -37,7 +37,7 @@ namespace EEA.Services.PoolServices
         {
             get
             {
-                return cache.Count;
+                return Cache.Count;
             }
         }
 
@@ -62,7 +62,7 @@ namespace EEA.Services.PoolServices
 
             if (Prefab != null)
             {
-                for (var i = total; i < preload; i++)
+                for (var i = _total; i < preload; i++)
                 {
                     FastPreload();
                 }
@@ -75,14 +75,14 @@ namespace EEA.Services.PoolServices
             if (Prefab != null)
             {
                 // Attempt to spawn from the cache
-                while (cache.Count > 0)
+                while (Cache.Count > 0)
                 {
                     // Get last cache entry
-                    var index = cache.Count - 1;
-                    var clone = cache[index];
+                    var index = Cache.Count - 1;
+                    var clone = Cache[index];
 
                     // Remove cache entry
-                    cache.RemoveAt(index);
+                    Cache.RemoveAt(index);
 
                     if (clone != null)
                     {
@@ -110,7 +110,7 @@ namespace EEA.Services.PoolServices
                 }
 
                 // Make a new clone?
-                if (Capacity <= 0 || total < Capacity)
+                if (Capacity <= 0 || _total < Capacity)
                 {
                     var clone = FastClone(position, rotation, parent);
 
@@ -135,9 +135,9 @@ namespace EEA.Services.PoolServices
         {
             var clone = GameObject.Instantiate(Prefab, position, rotation);
 
-            total += 1;
+            _total += 1;
 
-            clone.name = Prefab.name + " " + total;
+            clone.name = Prefab.name + " " + _total;
 
             clone.transform.SetParent(parent, false);
 
@@ -153,21 +153,21 @@ namespace EEA.Services.PoolServices
                 if (delay > 0.0f)
                 {
                     // Make sure we only add it to the marked object list once
-                    if (delayedDestructions.Exists(m => m.Clone == clone) == false)
+                    if (DelayedDestructions.Exists(m => m.Clone == clone) == false)
                     {
                         var delayedDestruction = ClassPool<DelayedDestruction>.Spawn() ?? new DelayedDestruction();
 
                         delayedDestruction.Clone = clone;
                         delayedDestruction.Life = delay;
 
-                        delayedDestructions.Add(delayedDestruction);
+                        DelayedDestructions.Add(delayedDestruction);
                     }
                 }
                 // Despawn now?
                 else
                 {
                     // Add it to the cache
-                    cache.Add(clone);
+                    Cache.Add(clone);
 
                     // Messages?
                     SendNotification(clone, "OnDespawn");
@@ -194,7 +194,7 @@ namespace EEA.Services.PoolServices
                 var clone = FastClone(Vector3.zero, Quaternion.identity, null);
 
                 // Add it to the cache
-                cache.Add(clone);
+                Cache.Add(clone);
 
                 // Deactivate it
                 clone.SetActive(false);

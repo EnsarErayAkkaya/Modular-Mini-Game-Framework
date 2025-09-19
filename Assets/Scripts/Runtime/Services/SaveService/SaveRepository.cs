@@ -4,49 +4,49 @@ namespace EEA.Services.SaveServices
 {
     public class SaveRepository<T> where T : ISaveable, new()
     {
-        private readonly ISaveHandler saveHandler;
-        private readonly string saveKey;
-        private T cachedEntity;
+        private readonly ISaveHandler _saveHandler;
+        private readonly string _saveKey;
+        private T _cachedEntity;
 
         public SaveRepository(ISaveHandler saveHandler, string saveKey)
         {
-            this.saveHandler = saveHandler;
-            this.saveKey = saveKey;
-            cachedEntity = new T();
+            this._saveHandler = saveHandler;
+            this._saveKey = saveKey;
+            _cachedEntity = new T();
         }
 
-        public T Get() => cachedEntity;
+        public T Get() => _cachedEntity;
 
         public async Task<T> LoadAsync()
         {
-            string data = await saveHandler.LoadDataAsync(saveKey);
+            string data = await _saveHandler.LoadDataAsync(_saveKey);
             if (string.IsNullOrEmpty(data))
-                return cachedEntity;
+                return _cachedEntity;
 
-            cachedEntity = new T().Deserialize<T>(data);
-            return cachedEntity;
+            _cachedEntity = new T().Deserialize<T>(data);
+            return _cachedEntity;
         }
 
         public T Load()
         {
-            string data = saveHandler.LoadData(saveKey);
+            string data = _saveHandler.LoadData(_saveKey);
             if (string.IsNullOrEmpty(data))
-                return cachedEntity;
+                return _cachedEntity;
 
-            cachedEntity = new T().Deserialize<T>(data);
-            return cachedEntity;
+            _cachedEntity = new T().Deserialize<T>(data);
+            return _cachedEntity;
         }
 
         public async Task SaveAsync(T entity)
         {
-            cachedEntity = entity;
-            await saveHandler.SaveDataAsync(saveKey, entity.Serialize());
+            _cachedEntity = entity;
+            await _saveHandler.SaveDataAsync(_saveKey, entity.Serialize());
         }
 
         public void Save(T entity)
         {
-            cachedEntity = entity;
-            saveHandler.SaveData(saveKey, entity.Serialize());
+            _cachedEntity = entity;
+            _saveHandler.SaveData(_saveKey, entity.Serialize());
         }
     }
 }

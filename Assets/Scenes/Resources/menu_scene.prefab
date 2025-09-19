@@ -66,7 +66,7 @@ GameObject:
   - component: {fileID: 2831474795433409554}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -584,6 +584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b0e18330273f10489f45cf6f3e00569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollRect: {fileID: 7796833351522559537}
-  snapSpeed: 25
-  velocityThreshold: 400
+  _scrollRect: {fileID: 7796833351522559537}
+  _snapSpeed: 25
+  _velocityThreshold: 400

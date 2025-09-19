@@ -5,7 +5,7 @@ namespace EEA.Services.PoolServices
 {
     public class PoolService : BaseService, IPoolService, ITickable
     {
-        private PoolServiceSettings settings;
+        private PoolServiceSettings _settings;
 
         // All the currently active pools in the scene
         public List<Pool> AllPools = new List<Pool>();
@@ -13,13 +13,13 @@ namespace EEA.Services.PoolServices
         // The reference between a spawned GameObject and its pool
         public Dictionary<GameObject, Pool> AllLinks = new Dictionary<GameObject, Pool>();
 
-        private Transform poolsTransform = null;
+        private Transform _poolsTransform = null;
 
         public PoolService(PoolServiceSettings poolServiceSettings)
         {
-            this.settings = poolServiceSettings;
+            this._settings = poolServiceSettings;
 
-            poolsTransform = new GameObject("Pools").transform;
+            _poolsTransform = new GameObject("Pools").transform;
         }
 
         public void Tick()
@@ -27,9 +27,9 @@ namespace EEA.Services.PoolServices
             foreach (var pool in AllPools)
             {
                 // Go through all marked objects
-                for (var i = pool.delayedDestructions.Count - 1; i >= 0; i--)
+                for (var i = pool.DelayedDestructions.Count - 1; i >= 0; i--)
                 {
-                    var markedObject = pool.delayedDestructions[i];
+                    var markedObject = pool.DelayedDestructions[i];
 
                     // Is it still valid?
                     if (markedObject.Clone != null)
@@ -56,16 +56,16 @@ namespace EEA.Services.PoolServices
 
         private void RemoveDelayedDestruction(Pool pool, int index)
         {
-            var delayedDestruction = pool.delayedDestructions[index];
+            var delayedDestruction = pool.DelayedDestructions[index];
 
-            pool.delayedDestructions.RemoveAt(index);
+            pool.DelayedDestructions.RemoveAt(index);
 
             ClassPool<DelayedDestruction>.Despawn(delayedDestruction);
         }
 
         public Pool InitializePool(GameObject prefab, int preload)
         {
-            return InitializePool(prefab, preload, settings.defaultPoolCapacity);
+            return InitializePool(prefab, preload, _settings.defaultPoolCapacity);
         }
 
         public Pool InitializePool(GameObject prefab, int preload, int capacity)
@@ -78,7 +78,7 @@ namespace EEA.Services.PoolServices
             {
                 pool = new Pool(prefab, new GameObject(prefab.name + " Pool").transform, capacity, preload);
 
-                pool.PoolParent.transform.SetParent(this.poolsTransform);
+                pool.PoolParent.transform.SetParent(this._poolsTransform);
 
                 // Add new pool to AllPools list
                 AllPools.Add(pool);
@@ -126,7 +126,7 @@ namespace EEA.Services.PoolServices
         {
             if (prefab != null)
             {
-                var pool = InitializePool(prefab, settings.defaultPoolPreload);
+                var pool = InitializePool(prefab, _settings.defaultPoolPreload);
 
                 // Spawn a clone from this pool
                 var clone = pool.FastSpawn(position, rotation, parent);

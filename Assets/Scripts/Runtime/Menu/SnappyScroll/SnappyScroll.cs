@@ -7,73 +7,73 @@ namespace EEA.Menu
 {
     public class SnappyScroll : MonoBehaviour, IEndDragHandler
     {
-        [SerializeField] private ScrollRect scrollRect;
-        [SerializeField] private float snapSpeed = 10f;
-        [SerializeField] private float velocityThreshold = 400f; // velocity cutoff for swipe
+        [SerializeField] private ScrollRect _scrollRect;
+        [SerializeField] private float _snapSpeed = 10f;
+        [SerializeField] private float _velocityThreshold = 400f; // velocity cutoff for swipe
 
-        private List<RectTransform> items = new List<RectTransform>();
-        private Dictionary<RectTransform, ISnappyScrollElement> itemElements = new Dictionary<RectTransform, ISnappyScrollElement>();
+        private List<RectTransform> _items = new List<RectTransform>();
+        private Dictionary<RectTransform, ISnappyScrollElement> _itemElements = new Dictionary<RectTransform, ISnappyScrollElement>();
 
-        private int currentIndex = 0;
-        private bool isSnapping = false;
-        private Vector2 targetPosition;
-        private int previousIndex = -1;
+        private int _currentIndex = 0;
+        private bool _isSnapping = false;
+        private Vector2 _targetPosition;
+        private int _previousIndex = -1;
 
         public void Setup()
         {
             // Cache all child items (mini-game cards)
-            foreach (Transform child in scrollRect.content)
+            foreach (Transform child in _scrollRect.content)
             {
                 if (child is RectTransform rect)
-                    items.Add(rect);
+                    _items.Add(rect);
 
                 if (child.TryGetComponent<ISnappyScrollElement>(out var element))
                 {
-                    itemElements[child as RectTransform] = element;
+                    _itemElements[child as RectTransform] = element;
                 }
             }
 
-            SnapTo(currentIndex, instant: true);
+            SnapTo(_currentIndex, instant: true);
         }
 
         private void Update()
         {
-            if (isSnapping)
+            if (_isSnapping)
             {
-                scrollRect.content.anchoredPosition = Vector2.Lerp(
-                    scrollRect.content.anchoredPosition,
-                    targetPosition,
-                    Time.deltaTime * snapSpeed
+                _scrollRect.content.anchoredPosition = Vector2.Lerp(
+                    _scrollRect.content.anchoredPosition,
+                    _targetPosition,
+                    Time.deltaTime * _snapSpeed
                 );
 
-                if (Vector2.Distance(scrollRect.content.anchoredPosition, targetPosition) < 0.1f)
+                if (Vector2.Distance(_scrollRect.content.anchoredPosition, _targetPosition) < 0.1f)
                 {
-                    scrollRect.content.anchoredPosition = targetPosition;
-                    isSnapping = false;
-                    scrollRect.velocity = Vector2.zero; // stop inertia
+                    _scrollRect.content.anchoredPosition = _targetPosition;
+                    _isSnapping = false;
+                    _scrollRect.velocity = Vector2.zero; // stop inertia
                 }
             }
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            float velocityX = scrollRect.velocity.x;
+            float velocityX = _scrollRect.velocity.x;
 
-            if (Mathf.Abs(velocityX) > velocityThreshold)
+            if (Mathf.Abs(velocityX) > _velocityThreshold)
             {
                 // Fast swipe ? move to next/previous
-                if (velocityX < 0 && currentIndex < items.Count - 1)
-                    currentIndex++;
-                else if (velocityX > 0 && currentIndex > 0)
-                    currentIndex--;
+                if (velocityX < 0 && _currentIndex < _items.Count - 1)
+                    _currentIndex++;
+                else if (velocityX > 0 && _currentIndex > 0)
+                    _currentIndex--;
             }
             else
             {
                 // Slow drag ? snap to nearest
-                currentIndex = GetNearestIndex();
+                _currentIndex = GetNearestIndex();
             }
 
-            SnapTo(currentIndex);
+            SnapTo(_currentIndex);
         }
 
         private void SnapTo(int index, bool instant = false)
@@ -82,47 +82,47 @@ namespace EEA.Menu
 
             if (instant)
             {
-                scrollRect.content.anchoredPosition = newPos;
-                isSnapping = false;
+                _scrollRect.content.anchoredPosition = newPos;
+                _isSnapping = false;
             }
             else
             {
-                targetPosition = newPos;
-                isSnapping = true;
+                _targetPosition = newPos;
+                _isSnapping = true;
             }
 
             //Debug.Log($"Snapping to index: {index}, previous: {previousIndex}");
 
-            if (previousIndex != index)
+            if (_previousIndex != index)
             {
-                itemElements[items[index]].OnFocus();
+                _itemElements[_items[index]].OnFocus();
 
-                if (previousIndex != -1)
+                if (_previousIndex != -1)
                 {
-                    itemElements[items[previousIndex]].OnUnfocus();
+                    _itemElements[_items[_previousIndex]].OnUnfocus();
                 }
 
-                previousIndex = index;
+                _previousIndex = index;
             }
         }
 
         private Vector2 GetSnapPosition(int index)
         {
-            float elementWidth = items[index].rect.width;
-            float spacing = scrollRect.content.GetComponent<HorizontalLayoutGroup>()?.spacing ?? 0f;
+            float elementWidth = _items[index].rect.width;
+            float spacing = _scrollRect.content.GetComponent<HorizontalLayoutGroup>()?.spacing ?? 0f;
 
             float offset = (elementWidth + spacing) * index;
-            return new Vector2(-offset, scrollRect.content.anchoredPosition.y);
+            return new Vector2(-offset, _scrollRect.content.anchoredPosition.y);
         }
 
         private int GetNearestIndex()
         {
             float closestDistance = float.MaxValue;
-            int nearestIndex = currentIndex;
+            int nearestIndex = _currentIndex;
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < _items.Count; i++)
             {
-                float dist = Mathf.Abs(scrollRect.content.anchoredPosition.x - GetSnapPosition(i).x);
+                float dist = Mathf.Abs(_scrollRect.content.anchoredPosition.x - GetSnapPosition(i).x);
                 if (dist < closestDistance)
                 {
                     closestDistance = dist;
@@ -133,6 +133,6 @@ namespace EEA.Menu
             return nearestIndex;
         }
 
-        public int GetCurrentIndex() => currentIndex;
+        public int GetCurrentIndex() => _currentIndex;
     }
 }

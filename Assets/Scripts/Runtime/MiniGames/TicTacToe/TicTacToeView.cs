@@ -52,7 +52,6 @@ namespace EEA.MiniGames.TicTacToe
                 if (data.WinningCells != null)
                 {
                     _strikeLine.gameObject.SetActive(true);
-                    StartCoroutine(PlayWinAnimation(data.Result, data.WinningCells));
                 }
                 else
                 {
@@ -63,6 +62,8 @@ namespace EEA.MiniGames.TicTacToe
             {
                 _strikeLine.gameObject.SetActive(false);
             }
+
+            StartCoroutine(PlayGameOverAnimation(data.Result, data.WinningCells));
         }
 
         public void UpdateCell(int row, int col, Player player)
@@ -96,52 +97,66 @@ namespace EEA.MiniGames.TicTacToe
                     GetButton(row, col).Text.text = "";
         }
 
-        private IEnumerator PlayWinAnimation(GameResult gameResult, List<Vector2Int> winningCells)
+        private IEnumerator PlayGameOverAnimation(GameResult gameResult, List<Vector2Int> winningCells)
         {
-            List<TicTacToeButton> buttons = new();
-
-            List<Vector3> originalAnchoredPositions = new();
-
-            foreach (var item in winningCells)
+            if (gameResult == GameResult.Draw)
             {
-                var button = GetButton(item.x, item.y);
-                buttons.Add(button);
-                originalAnchoredPositions.Add(GetButton(item.x, item.y).RectTransform.anchoredPosition);
+                ShowResultWindow(gameResult);
+
+                yield return StartCoroutine(Tweens.FadeCanvasGroup(_boardCanvasGroup, 1, 0, 0.3f));
             }
-
-            yield return new WaitForSeconds(0.1f);
-
-            yield return StartCoroutine(_strikeLine.AnimateStrikeLine(buttons[0].RectTransform.anchoredPosition, buttons[2].RectTransform.anchoredPosition));
-
-            yield return new WaitForSeconds(0.3f);
-
-
-            StartCoroutine(Tweens.AnimateAnchoredPosition(_strikeLine.RectTransform, _strikeLine.RectTransform.anchoredPosition + (Vector2.zero - buttons[1].RectTransform.anchoredPosition), 0.3f));
-            StartCoroutine(Tweens.FadeImage(_strikeLine.LineImage, 1, 0, 0.3f));
-
-            StartCoroutine(Tweens.AnimateAnchoredPosition(buttons[0].RectTransform, Vector2.zero, 0.3f));
-            StartCoroutine(Tweens.AnimateAnchoredPosition(buttons[1].RectTransform, Vector2.zero, 0.3f));
-            StartCoroutine(Tweens.AnimateAnchoredPosition(buttons[2].RectTransform, Vector2.zero, 0.3f));
-
-            yield return new WaitForSeconds(0.3f);
-
-            foreach (var button in buttons)
+            else
             {
-                button.Text.text = "";
-            }
+                List<TicTacToeButton> buttons = new();
 
+                List<Vector3> originalAnchoredPositions = new();
+
+                foreach (var item in winningCells)
+                {
+                    var button = GetButton(item.x, item.y);
+                    buttons.Add(button);
+                    originalAnchoredPositions.Add(GetButton(item.x, item.y).RectTransform.anchoredPosition);
+                }
+
+                yield return new WaitForSeconds(0.1f);
+
+                yield return StartCoroutine(_strikeLine.AnimateStrikeLine(buttons[0].RectTransform.anchoredPosition, buttons[2].RectTransform.anchoredPosition));
+
+                yield return new WaitForSeconds(0.3f);
+
+
+                StartCoroutine(Tweens.AnimateAnchoredPosition(_strikeLine.RectTransform, _strikeLine.RectTransform.anchoredPosition + (Vector2.zero - buttons[1].RectTransform.anchoredPosition), 0.3f));
+                StartCoroutine(Tweens.FadeImage(_strikeLine.LineImage, 1, 0, 0.3f));
+
+                StartCoroutine(Tweens.AnimateAnchoredPosition(buttons[0].RectTransform, Vector2.zero, 0.3f));
+                StartCoroutine(Tweens.AnimateAnchoredPosition(buttons[1].RectTransform, Vector2.zero, 0.3f));
+                StartCoroutine(Tweens.AnimateAnchoredPosition(buttons[2].RectTransform, Vector2.zero, 0.3f));
+
+                yield return new WaitForSeconds(0.3f);
+
+                foreach (var button in buttons)
+                {
+                    button.Text.text = "";
+                }
+
+                ShowResultWindow(gameResult);
+
+                yield return StartCoroutine(Tweens.FadeCanvasGroup(_boardCanvasGroup, 1, 0, 0.3f));
+
+                for (int i = 0; i < buttons.Count; i++)
+                {
+                    buttons[i].RectTransform.anchoredPosition = originalAnchoredPositions[i];
+                }
+            }
+        }
+
+        private void ShowResultWindow(GameResult gameResult)
+        {
             var resultWindow = ServicesContainer.WindowService.Create<GameResultWindow>(GameResultWindow.WindowId);
 
-            resultWindow.ShowResult((gameResult == GameResult.Draw) ? 
-                "Draw!" : 
+            resultWindow.ShowResult((gameResult == GameResult.Draw) ?
+                "Draw!" :
                 (gameResult == GameResult.XWins) ? "X\nWins!" : "O\nWins!");
-
-            yield return StartCoroutine(Tweens.FadeCanvasGroup(_boardCanvasGroup, 1, 0, 0.3f));
-
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                buttons[i].RectTransform.anchoredPosition = originalAnchoredPositions[i];
-            }
         }
 
         private void AnimeLineSize(Vector2 horizontalLineSize, Vector2 verticalLineSize)
